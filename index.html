@@ -1,0 +1,2007 @@
+<!DOCTYPE html>
+<html lang="fr"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>English Fun - Lucas</title>
+<style>
+:root {
+  --blue: #2563eb;
+  --light: #eff6ff;
+  --green: #15803d;
+  --red: #b91c1c;
+  --border: #dbe3ef;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  color: #1e293b;
+  background: #f3f6fb;
+}
+header {
+  text-align: center;
+  padding: 24px 12px;
+  color: white;
+  background: linear-gradient(120deg, #2563eb, #7c3aed);
+}
+header h1 { margin: 0 0 8px; font-size: 30px; }
+header p { margin: 0; }
+nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px;
+  background: white;
+  border-bottom: 1px solid var(--border);
+}
+button, select, input, textarea {
+  font: inherit;
+  border-radius: 8px;
+}
+button {
+  border: 0;
+  padding: 10px 14px;
+  cursor: pointer;
+  background: var(--blue);
+  color: white;
+}
+button:hover { filter: brightness(.95); }
+button.secondary {
+  background: #e2e8f0;
+  color: #1e293b;
+}
+button.green { background: var(--green); }
+button.red { background: var(--red); }
+button:disabled { opacity: .5; cursor: not-allowed; }
+main {
+  max-width: 950px;
+  margin: 22px auto;
+  padding: 0 14px 35px;
+}
+.panel {
+  background: white;
+  padding: 22px;
+  border-radius: 14px;
+  margin-bottom: 18px;
+  box-shadow: 0 3px 12px #0f172a0c;
+}
+h2 { margin-top: 0; }
+label {
+  display: block;
+  font-weight: bold;
+  margin: 12px 0 6px;
+}
+input, select, textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #cbd5e1;
+  background: white;
+}
+.row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+.actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+.question-card {
+  text-align: center;
+  padding: 24px 12px;
+  background: var(--light);
+  border-radius: 12px;
+  margin: 18px 0;
+}
+.question-card .prompt {
+  font-size: 27px;
+  font-weight: bold;
+  margin: 18px 0;
+  overflow-wrap: anywhere;
+}
+.question-card .small { color: #475569; }
+#choices {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 14px 0;
+}
+#choices button {
+  min-height: 48px;
+  background: white;
+  color: #1e293b;
+  border: 2px solid #cbd5e1;
+  overflow-wrap: anywhere;
+}
+#choices button:hover { border-color: var(--blue); }
+#feedback {
+  font-weight: bold;
+  margin: 14px 0;
+  min-height: 24px;
+}
+#feedback.good { color: var(--green); }
+#feedback.bad { color: var(--red); }
+.hidden { display: none !important; }
+.muted { color: #64748b; font-size: 14px; }
+.status {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 20px;
+  background: #dcfce7;
+  color: #166534;
+  font-size: 13px;
+}
+hr { border: 0; border-top: 1px solid var(--border); margin: 22px 0; }
+
+/* Rubrique « Voir et modifier les listes » */
+.toolbar {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 14px;
+}
+.table-wrap {
+  overflow: auto;
+  max-height: 520px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-top: 12px;
+}
+table.list-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.list-table th, .list-table td {
+  border-bottom: 1px solid var(--border);
+  padding: 8px;
+  text-align: left;
+  vertical-align: middle;
+}
+.list-table th {
+  background: var(--light);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+.list-table td input { padding: 6px; min-width: 100px; font-size: 16px; }
+.list-table tr.selected td { background: #fef9c3; }
+.list-table tr.editing td { background: #e0f2fe; }
+input[type="checkbox"], input[type="radio"] {
+  width: auto;
+  transform: scale(1.2);
+  margin: 0 6px 0 0;
+}
+.row-actions { display: flex; gap: 6px; flex-wrap: nowrap; }
+.row-actions button { padding: 6px 9px; font-size: 13px; }
+.radio-line { font-weight: normal; margin: 6px 0; }
+.msg-good { color: var(--green); font-weight: bold; }
+.notice {
+  background: #fef3c7;
+  color: #78350f;
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin: 12px 0;
+}
+ol.steps { padding-left: 20px; }
+ol.steps li { margin: 6px 0; }
+.msg-bad { color: var(--red); font-weight: bold; }
+
+@media (max-width: 600px) {
+  .toolbar { grid-template-columns: 1fr; }
+  .row { grid-template-columns: 1fr; }
+  #choices { grid-template-columns: 1fr; }
+  .panel { padding: 16px; }
+  .question-card .prompt { font-size: 23px; }
+}
+</style>
+<!-- Listes intégrées : remplies automatiquement par le bouton « Créer la version pour Lucas ». -->
+<script id="embeddedLists" type="application/json">{"version":1792000989490,"words":[["Salutations","Helllo","Bonjour"],["Salutations","Good morning","Bonjour matin"],["Salutations","Good afternoon","Bonjour (dans l’apres-midi)"],["Salutations","Good evening","Bonsoir"],["Salutations","Goodbye","Au revoir"],["Salutations","See you","À bientot"],["Salutations","See you tomorrow","À demain"],["Salutations","See you later","A plus tard"],["Salutations","See you soon","A bientot"],["Salutations","Good night","Bonne nuit"],["Salutations","How are you?","Comment vas-tu ?"],["Salutations","I'm fine, thank you","Je vais bien, merci"],["Salutations","I’m not very well","Je ne suis pas tres bien"],["Salutations","And you?","Et toi ?"],["Salutations","please","s'il vous plait"],["Salutations","thank you / thanks","merci"],["Salutations","You're welcome","De rien"],["Salutations","sorry","desole"],["Salutations","Excuse me","Excusez-moi"],["Salutations","Yes, please","Oui, s'il vous plait"],["Salutations","No, thank you","Non, merci"],["Salutations","Mr","Monsieur"],["Salutations","Mrs","Madame"],["Salutations","Miss","Mademoiselle"],["Salutations","friend","ami"],["Salutations","best friend","meilleur ami"],["Salutations","classmate","camarade de classe"],["Salutations","family","famille"],["Salutations","parent","parent"],["Salutations","child","enfant"],["Salutations","boyfriend","petit ami"],["Salutations","girlfriend","petite amie"],["Salutations","neighbour","voisin"],["Personal information","name","nom"],["Personal information","first name","prenom"],["Personal information","surname / last name","nom de famille"],["Personal information","age","age"],["Personal information","boy","garcon"],["Personal information","girl","fille"],["Personal information","man","homme"],["Personal information","woman","femme"],["Personal information","phone number","numero de telephone"],["Personal information","address","adresse"],["Personal information","birthday","anniversaire"],["Personal information","date of birth","date de naissance"],["Personal information","place of birth","lieu de naissance"],["Personal information","I am 13 years old","J'ai 13 ans"],["Personal information","My name is Lucas","Je m'appell Lucas"],["Personal information","What is your name?","Comment t'appelles-tu ?"],["Personal information","How old are you?","Quel age as-tu ?"],["Personal information","When were you born?","Quand es-tu ne ?"],["Personal information","Where were you born?","Ou es-tu ne ?"],["Family","parents","parents"],["Family","mother","mere"],["Family","father","pere"],["Family","brother","frere"],["Family","sister","sœur"],["Family","son","fils"],["Family","daughter","fille"],["Animals","pet","animal domestique"],["Animals","dog","chien"],["Animals","cat","chat"],["Animals","rabbit","lapin"],["Animals","hamster","hamster"],["Animals","fish","poisson"],["Animals","bird","oiseau"],["Colours","black","noir"],["Colours","white","blanc"],["Colours","red","rouge"],["Colours","blue","bleu"],["Colours","green","vert"],["Colours","yellow","jaune"],["Colours","orange","orange"],["Colours","pink","rose"],["Colours","purple","violet"],["Colours","brown","brun"],["Colours","grey","gris"],["Vêtements","clothes","vetements"],["Vêtements","T-shirt","T-shirt"],["Vêtements","shirt","chemise"],["Vêtements","trousers","pantalon"],["Vêtements","jeans","jeans"],["Vêtements","skirt","jupe"],["Vêtements","dress","robe"],["Vêtements","shorts","short"],["Vêtements","sweater","pull"],["Vêtements","coat","manteau"],["Vêtements","jacket","veste"],["Vêtements","shoes","chaussures"],["Vêtements","trainers","baskets"],["Vêtements","socks","chaussettes"],["Vêtements","hat","chapeau"],["Vêtements","glasses","lunettes"],["Apparence","big","grand"],["Apparence","small","petit"],["Apparence","young","jeune"],["Apparence","old","vieux"],["Apparence","beautiful","beau"],["Apparence","handsome","beau"],["Apparence","long","long"],["Apparence","short","court"],["Apparence","thin","mince"],["Apparence","slim","mince"],["Apparence","hair","cheveux"],["Apparence","long hair","cheveux longs"],["Apparence","short hair","cheveux courts"],["Apparence","straight hair","cheveux raides"],["Apparence","curly hair","cheveux boucles"],["Apparence","blond","blond"],["Apparence","brown hair","cheveux bruns"],["Apparence","blue eyes","yeux bleus"],["Nationalité","English","anglais"],["Nationalité","French","français"],["Nationalité","Dutch","neerlandais"],["Nationalité","German","allemand"],["Nationalité","Spanish","espagnol"],["Nationalité","Italian","italien"],["Nationalité","Belgian","belge"],["Les pièces","house","maison"],["Les pièces","flat","appartement"],["Les pièces","building","batiment"],["Les pièces","room","piece"],["Les pièces","bedroom","chambre"],["Les pièces","bathroom","salle de bains"],["Les pièces","kitchen","cuisine"],["Les pièces","living room","salon"],["Les pièces","dining room","salle à manger"],["Les pièces","toilet","toilettes"],["Les pièces","garden","jardin"],["Les pièces","balcony","balcon"],["Les pièces","garage","garage"],["Les pièces","door","porte"],["Les pièces","window","fenetre"],["Les pièces","wall","mur"],["Les pièces","floor","etage"],["Les pièces","roof","toit"],["Les pièces","stairs","escaliers"],["Les pièces","lift / elevator","ascenseur"],["Les meubles","table","table"],["Les meubles","chair","chaise"],["Les meubles","desk","bureau"],["Les meubles","bed","lit"],["Les meubles","sofa","canape"],["Les meubles","armchair","fauteuil"],["Les meubles","wardrobe","garde robe"],["Les meubles","cupboard","armoire"],["Les meubles","shelf","etagere"],["Les meubles","mirror","miroir"],["Les meubles","lamp","lampe"],["Les meubles","carpet","tapis"],["Les meubles","fridge","frigo"],["Les meubles","cooker","cuisiniere"],["Les meubles","shower","douche"],["Les meubles","bath","baignoire"],["Les meubles","sink","evier"],["Les magasins et les endroits en ville","street","rue"],["Les magasins et les endroits en ville","neighbourhood","quartier"],["Les magasins et les endroits en ville","park","parc"],["Les magasins et les endroits en ville","shop","magasin"],["Les magasins et les endroits en ville","supermarket","supermarche"],["Les magasins et les endroits en ville","bakery","boulangerie"],["Les magasins et les endroits en ville","chemistry","pharmacie"],["Les magasins et les endroits en ville","bank","banque"],["Les magasins et les endroits en ville","post office","bureau de poste"],["Les magasins et les endroits en ville","library","bibliotheque"],["Les magasins et les endroits en ville","school","ecole"],["Les magasins et les endroits en ville","hospital","hopital"],["Les magasins et les endroits en ville","police station","commissariat de police"],["Les magasins et les endroits en ville","train station","gare"],["Les magasins et les endroits en ville","bus stop","arret de bus"],["Anniversaire","birthday party","fete d'anniversaire"],["Anniversaire","present / gift","cadeau"],["Anniversaire","birthday card","carte d'anniversaire"],["Anniversaire","cake","gateau"],["Anniversaire","candle","bougie"],["Anniversaire","balloon","ballon"],["Anniversaire","party","fete"],["Anniversaire","invitation","invitation"],["Anniversaire","Happy birthday","Joyeux anniversaire"],["Anniversaire","Congratulations","Felicitations"],["Anniversaire","Thank you","Merci"],["Anniversaire","to make a cake","faire un gateau"],["Anniversaire","to open a present","ouvrir un cadeau"],["Anniversaire","to give a present","donner un cadeau"],["Le quotidien - daily routine","to get up","se lever"],["Le quotidien - daily routine","to have breakfast","prendre le petit-dejeuner"],["Le quotidien - daily routine","to wash","se laver"],["Le quotidien - daily routine","to get dressed","s'habiller"],["Le quotidien - daily routine","to brush my teeth","me brosser les dents"],["Le quotidien - daily routine","to go to school","aller à l'ecole"],["Le quotidien - daily routine","to have lunch","diner"],["Le quotidien - daily routine","to do my homework","faire mes devoirs"],["Le quotidien - daily routine","to study","etudier"],["Le quotidien - daily routine","to read","lire"],["Le quotidien - daily routine","to watch TV","regarder la television"],["Le quotidien - daily routine","to play","jouer"],["Le quotidien - daily routine","to go to bed","aller au lit"],["Le quotidien - daily routine","to sleep","dormir"],["Le quotidien - daily routine","to clean my room","nettoyer ma chambre"],["Le quotidien - daily routine","to help at home","aider à la maison"],["Loisirs","sport","sport"],["Loisirs","football","football"],["Loisirs","basketball","basket-ball"],["Loisirs","tennis","tennis"],["Loisirs","swimming","natation"],["Loisirs","cycling","velo"],["Loisirs","running","course à pied"],["Loisirs","dancing","danse"],["Loisirs","gymnastics","gymnastique"],["Loisirs","board game","jeu de societe"],["Loisirs","computer game","jeu video"],["Loisirs","music","musique"],["Loisirs","drawing","dessin"],["Loisirs","painting","peinture"],["Loisirs","reading","lecture"],["Loisirs","singing","chant"],["Loisirs","cooking","cuisine"],["Loisirs","photography","photographie"],["Loisirs","cinema","cinema"],["Loisirs","theatre","theatre"],["Loisirs","concert","concert"],["Loisirs","museum","musee"],["Loisirs","book","livre"],["Loisirs","comic","bande dessinee"],["Loisirs","magazine","magazine"],["Loisirs","film","film"],["Loisirs","song","chanson"],["Loisirs","racket","raquette"],["Loisirs","bike","velo"],["Loisirs","guitar","guitare"],["Loisirs","camera","appareil photo"],["Loisirs","ticket","billet"],["Loisirs","I play tennis","Je joue au tennis"],["Loisirs","to go to the cinema","aller au cinema"],["Loisirs","to listen to music","ecouter de la musique"],["Loisirs","to play football","jouer au football"],["Loisirs","to read a book","lire un livre"],["Loisirs","to take pictures","prendre des photos"],["Transport et direction","car","voiture"],["Transport et direction","I go to school by car","je vais à l'ecole en voiture"],["Transport et direction","bus","bus"],["Transport et direction","train","train"],["Transport et direction","tram","tram"],["Transport et direction","underground / metro","metro"],["Transport et direction","bicycle / bike","velo"],["Transport et direction","motorbike","moto"],["Transport et direction","taxi","taxi"],["Transport et direction","foot","pied"],["Transport et direction","I go to school on foot","je vais à l’ecole à pied"],["Transport et direction","plane","avion"],["Transport et direction","boat","bateau"],["Transport et direction","station","gare / station"],["Transport et direction","left","gauche"],["Transport et direction","right","droite"],["Transport et direction","straight on","tout droit"],["Transport et direction","here","ici"],["Transport et direction","there","là"],["Transport et direction","near","pres"],["Transport et direction","far","loin"],["Transport et direction","next to","à cote de"],["Transport et direction","opposite","en face de"],["Transport et direction","between","entre"],["Transport et direction","behind","derriere"],["Transport et direction","in front of","devant"],["Transport et direction","turn left","tourne à gauche"],["Transport et direction","turn right","tourne à droite"],["Transport et direction","go straight on","va tout droit"],["Transport et direction","Stop","Arrete toi"],["Transport et direction","Where is your school?","Où est ton ecole?"],["Transport et direction","How can I get to your school ?","Comment aller à ton ecole ?"],["Feelings, health, body","happy","heureux"],["Feelings, health, body","sad","triste"],["Feelings, health, body","angry","fache"],["Feelings, health, body","tired","fatigue"],["Feelings, health, body","bored","ennuye"],["Feelings, health, body","excited","excite"],["Feelings, health, body","scared","effraye"],["Feelings, health, body","worried","inquiet"],["Feelings, health, body","hungry","avoir faim"],["Feelings, health, body","thirsty","avoir soif"],["Feelings, health, body","ill / sick","malade"],["Feelings, health, body","fine","bien"],["Feelings, health, body","good","bien"],["Feelings, health, body","bad","mal"],["Feelings, health, body","I feel good","Je me sens bien"],["Feelings, health, body","I feel bad","Je me sens mal"],["Feelings, health, body","I'm tired","Je suis fatigue"],["Feelings, health, body","I'm ill","Je suis malade"],["Feelings, health, body","I have a headache","J'ai mal à la tete"],["Feelings, health, body","I have a stomach ache","J'ai mal au ventre"],["Feelings, health, body","I have a sore throat","J'ai mal à la gorge"],["Feelings, health, body","I have a cold","Je suis enrhume"],["Feelings, health, body","doctor","medecin"],["Feelings, health, body","medicine","medicament"],["Feelings, health, body","head","tete"],["Feelings, health, body","face","visage"],["Feelings, health, body","eye","œil"],["Feelings, health, body","ear","oreille"],["Feelings, health, body","nose","nez"],["Feelings, health, body","mouth","bouche"],["Feelings, health, body","tooth","dent"],["Feelings, health, body","neck","cou"],["Feelings, health, body","shoulder","epaule"],["Feelings, health, body","arm","bras"],["Feelings, health, body","hand","main"],["Feelings, health, body","finger","doigt"],["Feelings, health, body","leg","jambe"],["Feelings, health, body","knee","genou"],["Feelings, health, body","back","dos"],["Ecole","classroom","classe"],["Ecole","teacher","professeur"],["Ecole","student","eleve"],["Ecole","head teacher","directeur"],["Ecole","notebook","cahier"],["Ecole","exercise book","cahier d'exercices"],["Ecole","pen","stylo"],["Ecole","pencil","crayon"],["Ecole","pencil case","plumier"],["Ecole","ruler","latte"],["Ecole","eraser","gomme"],["Ecole","pencil sharpener","taille crayon"],["Ecole","schoolbag","cartable"],["Ecole","desk","banc"],["Ecole","board","tableau"],["Ecole","computer","ordinateur"],["Ecole","mathematics / maths","mathematiques"],["Ecole","science","sciences"],["Ecole","history","histoire"],["Ecole","geography","geographie"],["Ecole","physical education / PE","education physique"],["Ecole","art","arts plastiques"],["Ecole","break","recreation"],["Ecole","lunch break","pause de midi"],["Ecole","playground","cour de recreation"],["Ecole","canteen","cantine"],["Ecole","to write","ecrire"],["Ecole","to listen","ecouter"],["Ecole","to speak","parler"],["Ecole","to repeat","repeter"],["Ecole","to look","regarder"],["Ecole","open your book","ouvre ton livre"],["Ecole","close your book","ferme ton livre"],["Ecole","sit down","assieds-toi"],["Ecole","stand up","leve-toi"],["Ecole","be quiet","sois calme"],["Ecole","listen carefully","ecoute attentivement"],["Ecole","work in pairs","travaille par deux"],["Ecole","raise your hand","leve la main"],["Ecole","answer the question","reponds à la question"],["Ecole","write it down","ecris-le"],["Ecole","to spell","epeler"],["Ecole","How do you say poisson in English?","Comment dit-on poisson en anglais ?"],["Ecole","How do you spell fish ?","Comment epelle-t-on poisson ?"],["Ecole","I don't understand","Je ne comprends pas"],["Ecole","Can you repeat please?","Pouvez-vous repeter s'il vous plait ?"],["Magasin","butcher's","boucherie"],["Magasin","clothes shop","magasin de vetements"],["Magasin","shoe shop","magasin de chaussures"],["Magasin","bookshop","librairie"],["Magasin","market","marche"],["Magasin","shop assistant","vendeur"],["Magasin","baker","boulangerie"],["Magasin","butcher","boucherie"],["Magasin","customer","client"],["Magasin","money","argent"],["Magasin","price","prix"],["Magasin","cheap","bon marche"],["Magasin","expensive","cher"],["Magasin","high","haut"],["Magasin","low","bas"],["Magasin","heavy","lourd"],["Magasin","light","leger"],["Magasin","size","taille"],["Magasin","medium","moyen"],["Magasin","large","grand"],["Magasin","kilo","kilo"],["Magasin","litre","litre"],["Magasin","How much is it?","Combien ça coute ?"],["Magasin","How much are they?","Combien coutent-ils ?"],["Magasin","It's 10 euros","Ça coute 10 euros"],["Magasin","Can I have …, please?","Puis-je avoir …, s'il vous plait ?"],["Magasin","I'd like …","Je voudrais …"],["Magasin","Can I try it on?","Puis-je l'essayer ?"],["Nourriture","food","nourriture"],["Nourriture","drink","boisson"],["Nourriture","breakfast","petit-dejeuner"],["Nourriture","lunch","diner"],["Nourriture","dinner","souper"],["Nourriture","meal","repas"],["Nourriture","water","eau"],["Nourriture","milk","lait"],["Nourriture","juice","jus"],["Nourriture","tea","the"],["Nourriture","coffee","cafe"],["Nourriture","bread","pain"],["Nourriture","butter","beurre"],["Nourriture","cheese","fromage"],["Nourriture","egg","œuf"],["Nourriture","meat","viande"],["Nourriture","chicken","poulet"],["Nourriture","rice","riz"],["Nourriture","pasta","pates"],["Nourriture","potato","pomme de terre"],["Nourriture","tomato","tomate"],["Nourriture","carrot","carotte"],["Nourriture","salad","salade"],["Nourriture","apple","pomme"],["Nourriture","banana","banane"],["Nourriture","strawberry","fraise"],["Nourriture","cookie","biscuit"],["Nourriture","chocolate","chocolat"],["Nourriture","ice cream","glace"],["Nourriture","sugar","sucre"],["Nourriture","salt","sel"],["Nourriture","bottle","bouteille"],["Nourriture","glass","verre"],["Nourriture","cup","tasse"],["Nourriture","plate","assiette"],["Nourriture","knife","couteau"],["Nourriture","fork","fourchette"],["Nourriture","spoon","cuillere"],["Nourriture","to eat","manger"],["Nourriture","to drink","boire"],["Nourriture","to cook","cuisiner"],["Nourriture","to have lunch","dejeuner"],["Nourriture","to have dinner","diner"],["Nourriture","sweet","sucre"],["Nourriture","salty","sale"],["Nourriture","hot","chaud"],["Nourriture","cold","froid"],["Nourriture","delicious","delicieux"],["Nourriture","I like …","J'aime …"],["Nourriture","I don't like …","Je n'aime pas …"],["Nourriture","I'm hungry","J'ai faim"],["Nourriture","I'm thirsty","J'ai soif"],["Météo","weather","temps / meteo"],["Météo","What's the weather like?","Quel temps fait-il ?"],["Météo","sunny","ensoleille"],["Météo","cloudy","nuageux"],["Météo","rainy","pluvieux"],["Météo","windy","venteux"],["Météo","snowy","enneige"],["Météo","foggy","brumeux"],["Météo","stormy","orageux"],["Météo","warm","chaud"],["Météo","cool","frais"],["Météo","freezing","glacial"],["Météo","rain","pluie"],["Météo","snow","neige"],["Météo","wind","vent"],["Météo","cloud","nuage"],["Météo","sun","soleil"],["Météo","temperature","temperature"],["Météo","degree","degre"],["Météo","It's sunny","Il fait ensoleille"],["Météo","It's raining","Il pleut"],["Météo","It's snowing","Il neige"],["Météo","It's windy","Il y a du vent"],["Météo","It's hot","Il fait chaud"],["Météo","It's cold","Il fait froid"],["Météo","It's 10 degrees","Il fait 10 degres"],["Temps","Monday","lundi"],["Temps","Tuesday","mardi"],["Temps","Wednesday","mercredi"],["Temps","Thursday","jeudi"],["Temps","Friday","vendredi"],["Temps","Saturday","samedi"],["Temps","Sunday","dimanche"],["Temps","January","janvier"],["Temps","February","fevrier"],["Temps","March","mars"],["Temps","April","avril"],["Temps","May","mai"],["Temps","June","juin"],["Temps","July","juillet"],["Temps","August","aout"],["Temps","September","septembre"],["Temps","October","octobre"],["Temps","November","novembre"],["Temps","December","decembre"],["Temps","spring","printemps"],["Temps","summer","ete"],["Temps","autumn / fall","automne"],["Temps","winter","hiver"],["Temps","today","aujourd'hui"],["Temps","tomorrow","demain"],["Temps","yesterday","hier"],["Temps","day","jour"],["Temps","week","semaine"],["Temps","month","mois"],["Temps","year","annee"],["Temps","date","date"],["Temps","Christmas","Noël"],["Temps","Easter","Paques"],["Temps","New Year","Nouvel An"],["Temps","Halloween","Halloween"],["Temps","Morning","matin"],["Temps","Afternoon","apres-midi"],["Temps","Evening","Soir"],["Temps","Night","Nuit"],["Temps","noon","Midi"],["Temps","in the morning","au matin"],["Temps","in the afternoon","dans l'apres-midi"],["Temps","in the evening","au soir"],["Temps","at night","pendant la nuit"],["Temps","at noon","à midi"],["Temps","midnight","minuit"],["Temps","o'clock","heure pile"],["Temps","half","demie"],["Temps","quarter","quart d’heure"],["Temps","What time is it?","Quelle heure est-il ?"],["Temps","It's three o'clock","Il est trois heures"],["Temps","It's half past three","Il est trois heures et demie"],["Temps","It's quarter past three","Il est trois heures et quart"],["Temps","It's quarter to four","Il est quatre heures moins quart"],["Temps","What's the date today?","Quelle est la date aujourd'hui ?"],["Temps","Today is Monday","Nous sommes lundi"],["Temps","My birthday is in May","Mon anniversaire est en mai"]],"verbs":[["do","present simple","I","I do","I do not do","Do I do"],["do","present simple","you","you do","you do not do","Do you do"],["do","present simple","she","she does","she does not do","Does she do"],["do","present simple","he","he does","he does not do","Does he do"],["do","present simple","we","we do","we do not do","Do we do"],["do","present simple","they","they do","they do not do","Do they do"],["play","present simple","I","I play","I do not play","Do I play"],["play","present simple","you","you play","you do not play","Do you play"],["play","present simple","she","she plays","she does not play","Does she play"],["play","present simple","he","he plays","he does not play","Does he play"],["play","present simple","we","we play","we do not play","Do we play"],["play","present simple","they","they play","they do not play","Do they play"],["eat","present simple","I","I eat","I do not eat","Do I eat"],["eat","present simple","you","you eat","you do not eat","Do you eat"],["eat","present simple","she","she eats","she does not eat","Does she eat"],["eat","present simple","he","he eats","he does not eat","Does he eat"],["eat","present simple","we","we eat","we do not eat","Do we eat"],["eat","present simple","they","they eat","they do not eat","Do they eat"],["go","present simple","I","I go","I do not go","Do I go"],["go","present simple","you","you go","you do not go","Do you go"],["go","present simple","she","she goes","she does not go","Does she go"],["go","present simple","he","he goes","he does not go","Does he go"],["go","present simple","we","we go","we do not go","Do we go"],["go","present simple","they","they go","they do not go","Do they go"],["have","present simple","I","I have","I do not have","Do I have"],["have","present simple","you","you have","you do not have","Do you have"],["have","present simple","she","she has","she does not have","Does she have"],["have","present simple","he","he has","he does not have","Does he have"],["have","present simple","we","we have","we do not have","Do we have"],["have","present simple","they","they have","they do not have","Do they have"],["be","present simple","I","I am","I am not","Am I"],["be","present simple","you","you are","you are not","Are you"],["be","present simple","she","she is","she is not","Is she"],["be","present simple","he","he is","he is not","Is he"],["be","present simple","we","we are","we are not","Are we"],["be","present simple","they","they are","they are not","Are they"],["watch","present simple","I","I watch","I do not watch","Do I watch"],["watch","present simple","you","you watch","you do not watch","Do you watch"],["watch","present simple","she","she watches","she does not watch","Does she watch"],["watch","present simple","he","he watches","he does not watch","Does he watch"],["watch","present simple","we","we watch","we do not watch","Do we watch"],["watch","present simple","they","they watch","they do not watch","Do they watch"],["wear","present simple","I","I wear","I do not wear","Do I wear"],["wear","present simple","you","you wear","you do not wear","Do you wear"],["wear","present simple","she","she wears","she does not wear","Does she wear"],["wear","present simple","he","he wears","he does not wear","Does he wear"],["wear","present simple","we","we wear","we do not wear","Do we wear"],["wear","present simple","they","they wear","they do not wear","Do they wear"]],"sheetUrl":"https://docs.google.com/spreadsheets/d/1vi4ypewDhUT6iwOAVmO-jHYoNBQ5cwRd-WSUBFIuM2s/edit?usp=sharing"}</script>
+</head>
+<body>
+<header>
+  <h1>🎯 English Fun - Lucas</h1>
+  <p>Apprendre l’anglais en s’amusant !</p>
+</header>
+
+<nav>
+  <button id="practiceTab">🎮 Entraînement</button>
+  <button id="errorsTab" class="secondary">❌ Mes erreurs</button>
+  <button id="editTab" class="secondary">✏️ Voir et modifier les listes</button>
+  <button id="manageTab" class="secondary">📚 Gestion des listes</button>
+</nav>
+
+<main>
+  <section id="practiceSection">
+    <div class="panel">
+      <h2>⚙️ Prépare ton entraînement</h2>
+      <div class="row">
+        <div>
+          <label for="exerciseType">Type d’exercice</label>
+          <select id="exerciseType">
+            <option value="vocab">Vocabulaire</option>
+            <option value="verbs">Conjugaison</option>
+            <option value="errors">❌ Mes erreurs (révision)</option>
+          </select>
+        </div>
+        <div id="errorsScopeBox" class="hidden">
+          <label for="errorsScope">Erreurs à revoir</label>
+          <select id="errorsScope">
+            <option value="all">Toutes mes erreurs</option>
+            <option value="vocab">Vocabulaire seulement</option>
+            <option value="verbs">Conjugaison seulement</option>
+          </select>
+        </div>
+        <div id="themeBox">
+          <label for="theme">Thème du vocabulaire</label>
+          <select id="theme"></select>
+        </div>
+        <div>
+          <label for="direction">Sens de traduction</label>
+          <select id="direction">
+            <option value="mix">Mélangé</option>
+            <option value="en-fr">Anglais → français</option>
+            <option value="fr-en">Français → anglais</option>
+          </select>
+        </div>
+        <div>
+          <label for="answerMode">Mode de réponse</label>
+          <select id="answerMode">
+            <option value="qcm">Choix multiple</option>
+            <option value="typed">Écrire la réponse</option>
+          </select>
+        </div>
+        <div id="tenseBox" class="hidden">
+          <label for="tense">Temps de conjugaison</label>
+          <select id="tense"></select>
+        </div>
+        <div id="formBox" class="hidden">
+          <label for="verbForm">Forme de la phrase</label>
+          <select id="verbForm">
+            <option value="affirmatif">Affirmative</option>
+            <option value="negatif">Négative</option>
+            <option value="interrogatif">Interrogative</option>
+          </select>
+        </div>
+      </div>
+      <div class="actions">
+        <button id="startBtn">Commencer / Nouvelle question</button>
+      </div>
+      <p class="muted">Astuce : tu peux écouter les mots avec la fonction audio de ton navigateur si elle est disponible.</p>
+    </div>
+
+    <div class="panel">
+      <h2>✏️ À toi de jouer !</h2>
+      <div id="quizArea">
+        <div class="question-card">
+          <div class="small" id="questionLabel">Prêt à commencer ?</div>
+          <div class="prompt" id="prompt">Clique sur « Commencer » !</div>
+          <div id="questionHint" class="small"></div>
+        </div>
+
+        <div id="choices"></div>
+
+        <div id="typedArea" class="hidden">
+          <label for="typedAnswer">Ta réponse</label>
+          <input id="typedAnswer" autocomplete="off" placeholder="Écris ta réponse ici">
+          <div class="actions">
+            <button id="checkBtn">Vérifier ma réponse</button>
+          </div>
+        </div>
+
+        <div id="feedback" aria-live="polite"></div>
+        <div class="actions">
+          <button id="audioBtn" class="secondary">🔊 Écouter</button>
+          <button id="nextBtn" class="green">Question suivante →</button>
+        </div>
+      </div>
+      <hr>
+      <p><strong>Score :</strong> <span id="score">0 bonne réponse sur 0</span></p>
+      <p class="muted" id="listStatus"></p>
+    </div>
+  </section>
+
+  <section id="errorsSection" class="hidden">
+    <div class="panel">
+      <h2>❌ Mes erreurs</h2>
+      <p>Chaque mauvaise réponse est ajoutée ici automatiquement. Un mot quitte la liste quand il est réussi <strong>2 fois de suite</strong>.</p>
+      <div class="actions">
+        <button id="startErrorsBtn" class="green">🎯 S’entraîner sur mes erreurs</button>
+      </div>
+      <p id="errorsInfo" class="muted"></p>
+      <div class="table-wrap">
+        <table id="errorsTable" class="list-table"></table>
+      </div>
+      <div class="actions">
+        <button id="clearErrorsBtn" class="red">⚠️ Vider la liste des erreurs</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="editSection" class="hidden">
+    <div class="panel">
+      <h2>✏️ Voir et modifier les listes</h2>
+      <p id="sheetEditNotice" class="notice hidden">🌐 Les listes viennent du Google Sheet. Les modifications faites ici seront remplacées à la prochaine mise à jour : pour qu’elles soient gardées et partagées, fais-les plutôt dans le Google Sheet.</p>
+      <p class="muted">Chaque modification est enregistrée automatiquement dans ce navigateur. Avant de supprimer beaucoup d’éléments, exporte d’abord une copie de sécurité en CSV (boutons en bas de la page).</p>
+      <div class="actions">
+        <button id="editVocabTab">📘 Vocabulaire</button>
+        <button id="editVerbsTab" class="secondary">📗 Conjugaison</button>
+      </div>
+      <div class="toolbar">
+        <div>
+          <label for="editSearch">🔍 Rechercher</label>
+          <input id="editSearch" autocomplete="off" placeholder="Tape un mot (anglais ou français)…">
+        </div>
+        <div>
+          <label for="editGroup" id="editGroupLabel">Filtrer par thème</label>
+          <select id="editGroup"></select>
+        </div>
+      </div>
+      <p id="editInfo" class="muted"></p>
+      <div class="table-wrap">
+        <table id="editTable" class="list-table"></table>
+      </div>
+      <div class="actions">
+        <button id="deleteSelectedBtn" class="red">🗑️ Supprimer la sélection</button>
+        <button id="deleteGroupBtn" class="red">🗑️ Supprimer tout le thème</button>
+        <button id="clearListBtn" class="red">⚠️ Vider toute la liste</button>
+        <button id="dedupeBtn" class="secondary">🧹 Supprimer les doublons</button>
+        <button id="undoBtn" class="secondary">↩️ Annuler la dernière suppression</button>
+      </div>
+      <p id="editStatus" aria-live="polite"></p>
+    </div>
+
+    <div class="panel">
+      <h2>💾 Copie de sécurité</h2>
+      <p class="muted">Exporte la liste avant une grosse suppression : tu pourras la recharger depuis « Gestion des listes » si besoin.</p>
+      <div class="actions">
+        <button id="exportVocabBtn2" class="secondary">Exporter le vocabulaire (CSV)</button>
+        <button id="exportVerbsBtn2" class="secondary">Exporter la conjugaison (CSV)</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="manageSection" class="hidden">
+    <div class="panel">
+      <h2>🌐 Listes partagées avec un Google Sheet</h2>
+      <p>Avec un Google Sheet, plusieurs personnes peuvent ajouter ou corriger des mots, chacune sur son ordinateur. L’application lit le Google Sheet à chaque ouverture : Lucas a toujours la dernière version.</p>
+      <ol class="steps">
+        <li>Crée un Google Sheet avec <strong>deux onglets</strong> nommés exactement <code>vocabulaire</code> et <code>conjugaison</code>.</li>
+        <li>Onglet <code>vocabulaire</code> : colonnes <code>theme</code>, <code>anglais</code>, <code>francais</code>. Onglet <code>conjugaison</code> : <code>verbe</code>, <code>temps</code>, <code>sujet</code>, <code>affirmatif</code>, <code>negatif</code>, <code>interrogatif</code>. (Astuce : exporte tes listes actuelles en CSV et importe-les dans chaque onglet.)</li>
+        <li>Clique sur <strong>Partager</strong> → « Accès général » : <strong>Tous les utilisateurs disposant du lien</strong> (rôle Lecteur). Donne le rôle <strong>Éditeur</strong> aux personnes qui ajoutent des mots.</li>
+        <li>Copie le lien du Google Sheet et colle-le ci-dessous.</li>
+        <li>Clique sur « 📤 Créer la version pour Lucas » (plus bas) <strong>une seule fois</strong> pour que son application connaisse le lien.</li>
+      </ol>
+      <label for="sheetUrl">Lien du Google Sheet</label>
+      <input id="sheetUrl" autocomplete="off" placeholder="https://docs.google.com/spreadsheets/d/…/edit">
+      <div class="actions">
+        <button id="saveSheetBtn">Enregistrer le lien et synchroniser</button>
+        <button id="syncSheetBtn" class="green">🔄 Mettre à jour maintenant</button>
+        <button id="removeSheetBtn" class="secondary">Ne plus utiliser le Google Sheet</button>
+      </div>
+      <p id="sheetStatus" aria-live="polite"></p>
+      <p id="sheetHelp" class="notice hidden">
+        Test rapide : ouvre <a id="sheetTestLink" href="#" target="_blank" rel="noopener">ce lien de test</a> dans une fenêtre de navigation privée.
+        Si tu vois (ou télécharges) tes mots, le partage est bon. Si Google demande de se connecter, le Google Sheet n’est pas partagé avec « Tous les utilisateurs disposant du lien ».
+      </p>
+    </div>
+
+    <div class="panel">
+      <h2>📤 Envoyer les listes à Lucas</h2>
+      <p>Les listes sont enregistrées <strong>uniquement dans le navigateur de cet appareil</strong>. Pour que Lucas les retrouve sur son appareil, crée une version de l’application qui contient tes listes, puis mets ce fichier à la place de l’ancien derrière le lien (ou envoie-le-lui).</p>
+      <div class="actions">
+        <button id="buildForLucasBtn" class="green">📤 Créer la version pour Lucas</button>
+      </div>
+      <p id="buildStatus" class="muted"></p>
+      <p class="muted">Avec un Google Sheet : à faire une seule fois (le fichier contient le lien du Google Sheet). Sans Google Sheet : à refaire à chaque fois que tu changes les listes. À l’ouverture du nouveau fichier, les listes de Lucas sont remplacées par les tiennes. Ses erreurs à revoir sont conservées.</p>
+    </div>
+
+    <div class="panel">
+      <h2>💾 Sauvegarde automatique</h2>
+      <p>Les listes chargées sont enregistrées automatiquement dans ce navigateur. Lorsque tu rouvres cette application dans le même navigateur, elles sont normalement retrouvées.</p>
+      <p><span class="status">Sauvegarde automatique activée</span></p>
+      <p class="muted">Important : garde aussi tes fichiers CSV comme copie de sécurité. La sauvegarde du navigateur peut être effacée si ses données sont supprimées ou si tu utilises un autre navigateur ou appareil.</p>
+      <div class="actions">
+        <button id="exportVocabBtn" class="secondary">Exporter le vocabulaire (CSV)</button>
+        <button id="exportVerbsBtn" class="secondary">Exporter la conjugaison (CSV)</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>📘 Charger une liste de vocabulaire</h2>
+      <p>Le fichier CSV doit contenir trois colonnes : <code>theme;anglais;francais</code>.</p>
+      <label for="vocabFile">Choisir le fichier CSV de vocabulaire</label>
+      <input id="vocabFile" type="file" accept=".csv,.txt">
+      <label>Que faire avec la liste actuelle ?</label>
+      <label class="radio-line"><input type="radio" name="vocabMode" value="add" checked=""> Ajouter les nouveaux mots à la liste existante (les doublons sont ignorés)</label>
+      <label class="radio-line"><input type="radio" name="vocabMode" value="replace"> Remplacer toute la liste par le fichier</label>
+      <div class="actions">
+        <button id="loadVocabBtn">Charger et sauvegarder le vocabulaire</button>
+        <button id="vocabTemplateBtn" class="secondary">Télécharger un modèle CSV</button>
+      </div>
+      <p id="vocabStatus" class="muted"></p>
+    </div>
+
+    <div class="panel">
+      <h2>📗 Charger une liste de conjugaison</h2>
+      <p>Le fichier CSV doit contenir six colonnes : <code>verbe;temps;sujet;affirmatif;negatif;interrogatif</code>.</p>
+      <label for="verbsFile">Choisir le fichier CSV de conjugaison</label>
+      <input id="verbsFile" type="file" accept=".csv,.txt">
+      <label>Que faire avec la liste actuelle ?</label>
+      <label class="radio-line"><input type="radio" name="verbsMode" value="add" checked=""> Ajouter les nouvelles lignes à la liste existante (les doublons sont ignorés)</label>
+      <label class="radio-line"><input type="radio" name="verbsMode" value="replace"> Remplacer toute la liste par le fichier</label>
+      <div class="actions">
+        <button id="loadVerbsBtn">Charger et sauvegarder la conjugaison</button>
+        <button id="verbsTemplateBtn" class="secondary">Télécharger un modèle CSV</button>
+      </div>
+      <p id="verbsStatus" class="muted"></p>
+    </div>
+
+    <div class="panel">
+      <h2>📊 Listes actuellement chargées</h2>
+      <p id="counts"></p>
+      <p class="muted">Les listes sont sauvegardées dès que le chargement réussit. Pour voir, corriger ou supprimer des mots, va dans « ✏️ Voir et modifier les listes ».</p>
+    </div>
+  </section>
+</main>
+
+<script>
+"use strict";
+
+/* Copie du fichier tel qu'il a été ouvert (avant toute modification de la page),
+   utilisée pour créer la version qui contient les listes. */
+const ORIGINAL_HTML = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+
+/* Listes proposées au premier lancement */
+const defaultWords = [
+  ["Animaux", "cat", "chat"],
+  ["Animaux", "dog", "chien"],
+  ["Animaux", "bird", "oiseau"],
+  ["Animaux", "horse", "cheval"],
+  ["Animaux", "rabbit", "lapin"],
+  ["Animaux", "fish", "poisson"],
+  ["Famille", "mother", "mère"],
+  ["Famille", "father", "père"],
+  ["Famille", "sister", "sœur"],
+  ["Famille", "brother", "frère"],
+  ["Famille", "parents", "parents"],
+  ["Famille", "grandmother", "grand-mère"],
+  ["École", "school", "école"],
+  ["École", "teacher", "professeur"],
+  ["École", "student", "élève"],
+  ["École", "book", "livre"],
+  ["École", "pencil", "crayon"],
+  ["École", "desk", "bureau"],
+  ["Maison", "house", "maison"],
+  ["Maison", "kitchen", "cuisine"],
+  ["Maison", "bedroom", "chambre"],
+  ["Maison", "door", "porte"],
+  ["Maison", "window", "fenêtre"],
+  ["Maison", "garden", "jardin"],
+  ["Nourriture", "apple", "pomme"],
+  ["Nourriture", "bread", "pain"],
+  ["Nourriture", "water", "eau"],
+  ["Nourriture", "milk", "lait"],
+  ["Nourriture", "cheese", "fromage"],
+  ["Nourriture", "breakfast", "petit-déjeuner"],
+  ["Couleurs", "red", "rouge"],
+  ["Couleurs", "blue", "bleu"],
+  ["Couleurs", "green", "vert"],
+  ["Couleurs", "yellow", "jaune"],
+  ["Couleurs", "black", "noir"],
+  ["Couleurs", "white", "blanc"],
+  ["Corps", "head", "tête"],
+  ["Corps", "hand", "main"],
+  ["Corps", "foot", "pied"],
+  ["Corps", "eye", "œil"],
+  ["Corps", "mouth", "bouche"],
+  ["Corps", "hair", "cheveux"],
+  ["Actions", "to eat", "manger"],
+  ["Actions", "to drink", "boire"],
+  ["Actions", "to play", "jouer"],
+  ["Actions", "to read", "lire"],
+  ["Actions", "to write", "écrire"],
+  ["Actions", "to sleep", "dormir"],
+  ["Nature", "sun", "soleil"],
+  ["Nature", "moon", "lune"],
+  ["Nature", "tree", "arbre"],
+  ["Nature", "flower", "fleur"],
+  ["Nature", "river", "rivière"],
+  ["Nature", "mountain", "montagne"],
+  ["Vêtements", "shirt", "chemise"],
+  ["Vêtements", "trousers", "pantalon"],
+  ["Vêtements", "shoes", "chaussures"],
+  ["Vêtements", "coat", "manteau"],
+  ["Vêtements", "dress", "robe"],
+  ["Vêtements", "hat", "chapeau"]
+];
+
+/* Les réponses de conjugaison sont des phrases complètes. */
+const defaultVerbs = [
+  ["to be", "Present simple", "I", "I am", "I am not", "Am I?"],
+  ["to be", "Present simple", "you", "you are", "you are not", "Are you?"],
+  ["to be", "Present simple", "he", "he is", "he is not", "Is he?"],
+  ["to be", "Past simple", "I", "I was", "I was not", "Was I?"],
+  ["to be", "Past simple", "they", "they were", "they were not", "Were they?"],
+  ["to have", "Present simple", "I", "I have", "I do not have", "Do I have?"],
+  ["to have", "Present simple", "she", "she has", "she does not have", "Does she have?"],
+  ["to have", "Past simple", "I", "I had", "I did not have", "Did I have?"],
+  ["to play", "Present simple", "I", "I play", "I do not play", "Do I play?"],
+  ["to play", "Present simple", "he", "he plays", "he does not play", "Does he play?"],
+  ["to play", "Past simple", "I", "I played", "I did not play", "Did I play?"],
+  ["to play", "Future simple", "I", "I will play", "I will not play", "Will I play?"],
+  ["to like", "Present simple", "I", "I like", "I do not like", "Do I like?"],
+  ["to like", "Present simple", "she", "she likes", "she does not like", "Does she like?"],
+  ["to like", "Past simple", "I", "I liked", "I did not like", "Did I like?"],
+  ["to go", "Present simple", "I", "I go", "I do not go", "Do I go?"],
+  ["to go", "Present simple", "he", "he goes", "he does not go", "Does he go?"],
+  ["to go", "Past simple", "I", "I went", "I did not go", "Did I go?"],
+  ["to go", "Future simple", "I", "I will go", "I will not go", "Will I go?"],
+  ["to eat", "Present simple", "I", "I eat", "I do not eat", "Do I eat?"],
+  ["to eat", "Present simple", "she", "she eats", "she does not eat", "Does she eat?"],
+  ["to eat", "Past simple", "I", "I ate", "I did not eat", "Did I eat?"],
+  ["to eat", "Future simple", "I", "I will eat", "I will not eat", "Will I eat?"],
+  ["to see", "Present simple", "I", "I see", "I do not see", "Do I see?"],
+  ["to see", "Past simple", "I", "I saw", "I did not see", "Did I see?"],
+  ["to see", "Future simple", "I", "I will see", "I will not see", "Will I see?"],
+  ["to do", "Present simple", "I", "I do", "I do not do", "Do I do?"],
+  ["to do", "Present simple", "he", "he does", "he does not do", "Does he do?"],
+  ["to do", "Past simple", "I", "I did", "I did not do", "Did I do?"],
+  ["to do", "Future simple", "I", "I will do", "I will not do", "Will I do?"]
+];
+
+let words = defaultWords.map(row => [...row]);
+let verbs = defaultVerbs.map(row => [...row]);
+let question = null;
+let answered = false;
+let total = 0;
+let correct = 0;
+
+const $ = id => document.getElementById(id);
+
+/* Sauvegarde locale automatique des deux listes. */
+function saveLists() {
+  try {
+    localStorage.setItem("lucas_vocab_v3", JSON.stringify(words));
+    localStorage.setItem("lucas_conj_v3", JSON.stringify(verbs));
+    $("listStatus").textContent =
+      "Listes sauvegardées automatiquement dans ce navigateur.";
+    updateCounts();
+    return true;
+  } catch (error) {
+    alert("La sauvegarde automatique a échoué. Conserve tes fichiers CSV.");
+    return false;
+  }
+}
+
+function readEmbeddedLists() {
+  try {
+    const data = JSON.parse(document.getElementById("embeddedLists").textContent);
+    if (data && Array.isArray(data.words) && Array.isArray(data.verbs) && data.version) {
+      return {
+        version: Number(data.version),
+        words: data.words.filter(r => Array.isArray(r) && r.length >= 3).map(r => r.slice(0, 3).map(String)),
+        verbs: data.verbs.filter(r => Array.isArray(r) && r.length >= 6).map(r => r.slice(0, 6).map(String)),
+        sheetUrl: typeof data.sheetUrl === "string" ? data.sheetUrl : ""
+      };
+    }
+  } catch (error) {
+    console.warn("Listes intégrées illisibles.", error);
+  }
+  return null;
+}
+
+/* Au démarrage :
+   - si le fichier contient des listes plus récentes que celles du navigateur,
+     elles sont utilisées et sauvegardées ;
+   - sinon, les listes sauvegardées remplacent les listes par défaut. */
+function loadSavedLists() {
+  const embedded = readEmbeddedLists();
+  let savedVersion = 0;
+  try {
+    savedVersion = Number(localStorage.getItem("lucas_lists_version")) || 0;
+  } catch (error) { /* stockage indisponible */ }
+
+  if (embedded) {
+    words = embedded.words;
+    verbs = embedded.verbs;
+  }
+  if (embedded && embedded.version > savedVersion) {
+    saveLists();
+    try {
+      localStorage.setItem("lucas_lists_version", String(embedded.version));
+    } catch (error) { /* stockage indisponible */ }
+    $("listStatus").textContent = "Nouvelles listes reçues : " + words.length +
+      " mots et " + verbs.length + " lignes de conjugaison.";
+    return;
+  }
+
+  try {
+    const savedWords = localStorage.getItem("lucas_vocab_v3");
+    const savedVerbs = localStorage.getItem("lucas_conj_v3");
+
+    if (savedWords) {
+      const data = JSON.parse(savedWords);
+      if (Array.isArray(data) &&
+          data.every(row => Array.isArray(row) && row.length >= 3)) {
+        words = data.map(row => row.slice(0, 3).map(String));
+      }
+    }
+
+    if (savedVerbs) {
+      const data = JSON.parse(savedVerbs);
+      if (Array.isArray(data) &&
+          data.every(row => Array.isArray(row) && row.length >= 6)) {
+        verbs = data.map(row => row.slice(0, 6).map(String));
+      }
+    }
+  } catch (error) {
+    console.warn("Impossible de lire les listes sauvegardées.", error);
+  }
+}
+
+function normalize(value) {
+  return String((value == null ? "" : value))
+    .trim()
+    .toLocaleLowerCase()
+    .replace(/[’]/g, "'")
+    .replace(/\s+/g, " ")
+    .replace(/[.!?]+$/g, "");
+}
+
+function shuffle(items) {
+  const result = [...items];
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
+
+function refreshThemes() {
+  const select = $("theme");
+  const previous = select.value;
+  const themes = [...new Set(words.map(row => row[0]).filter(Boolean))].sort();
+  select.innerHTML = "";
+
+  const all = document.createElement("option");
+  all.value = "all";
+  all.textContent = "Tous les thèmes";
+  select.appendChild(all);
+
+  themes.forEach(theme => {
+    const option = document.createElement("option");
+    option.value = theme;
+    option.textContent = theme;
+    select.appendChild(option);
+  });
+
+  if ([...select.options].some(option => option.value === previous)) {
+    select.value = previous;
+  }
+}
+
+function refreshTenses() {
+  const select = $("tense");
+  const previous = select.value;
+  const tenses = [...new Set(verbs.map(row => row[1]).filter(Boolean))].sort();
+  select.innerHTML = "";
+
+  const all = document.createElement("option");
+  all.value = "all";
+  all.textContent = "Tous les temps";
+  select.appendChild(all);
+
+  tenses.forEach(tense => {
+    const option = document.createElement("option");
+    option.value = tense;
+    option.textContent = tense;
+    select.appendChild(option);
+  });
+
+  if ([...select.options].some(option => option.value === previous)) {
+    select.value = previous;
+  }
+}
+
+function updateCounts() {
+  if ($("counts")) {
+    $("counts").textContent =
+      words.length + " mots de vocabulaire · " +
+      verbs.length + " lignes de conjugaison.";
+  }
+}
+
+function updateExerciseControls() {
+  const mode = $("exerciseType").value;
+  $("themeBox").classList.toggle("hidden", mode !== "vocab");
+  $("tenseBox").classList.toggle("hidden", mode !== "verbs");
+  $("formBox").classList.toggle("hidden", mode !== "verbs");
+  $("errorsScopeBox").classList.toggle("hidden", mode !== "errors");
+}
+
+function chooseDirection() {
+  const setting = $("direction").value;
+  if (setting !== "mix") return setting;
+  return Math.random() < 0.5 ? "en-fr" : "fr-en";
+}
+
+/* ---------- Mots ratés ---------- */
+
+const MASTERY = 2; // réussites de suite pour retirer un mot des erreurs
+const FORM_INDEX = { affirmatif: 3, negatif: 4, interrogatif: 5 };
+const FORM_LABEL = {
+  affirmatif: "forme affirmative",
+  negatif: "forme négative",
+  interrogatif: "forme interrogative"
+};
+let mistakes = [];
+let lastErrorKey = null;
+
+function mistakeKey(type, row, form) {
+  return type === "vocab"
+    ? "v|" + normalize(row[1]) + "|" + normalize(row[2])
+    : "c|" + normalize(row[0]) + "|" + normalize(row[1]) + "|" +
+      normalize(row[2]) + "|" + form;
+}
+
+function saveMistakes() {
+  try {
+    localStorage.setItem("lucas_errors_v1", JSON.stringify(mistakes));
+  } catch (error) {
+    console.warn("Impossible d'enregistrer les erreurs.", error);
+  }
+  updateErrorsBadge();
+}
+
+function loadMistakes() {
+  try {
+    const data = JSON.parse(localStorage.getItem("lucas_errors_v1") || "[]");
+    if (Array.isArray(data)) {
+      mistakes = data.filter(m =>
+        m && (m.type === "vocab" || m.type === "verbs") &&
+        Array.isArray(m.row) && m.key &&
+        (m.type === "vocab" || FORM_INDEX[m.form]));
+    }
+  } catch (error) {
+    console.warn("Impossible de lire les erreurs.", error);
+  }
+}
+
+function updateErrorsBadge() {
+  $("errorsTab").textContent = "❌ Mes erreurs (" + mistakes.length + ")";
+}
+
+/* Enregistre le résultat d'une question dans la liste des erreurs. */
+function recordResult(q, isCorrect) {
+  const index = mistakes.findIndex(m => m.key === q.key);
+  let status = null;
+
+  if (!isCorrect) {
+    if (index === -1) {
+      mistakes.push({
+        key: q.key, type: q.type, row: [...q.row], form: q.form || null,
+        wrong: 1, streak: 0, last: Date.now()
+      });
+      status = "added";
+    } else {
+      const m = mistakes[index];
+      m.wrong++;
+      m.streak = 0;
+      m.last = Date.now();
+      status = "again";
+    }
+  } else if (index !== -1) {
+    const m = mistakes[index];
+    m.streak++;
+    if (m.streak >= MASTERY) {
+      mistakes.splice(index, 1);
+      status = "mastered";
+    } else {
+      status = "progress";
+    }
+  }
+
+  if (status) saveMistakes();
+  return status;
+}
+
+/* Si un mot est corrigé dans « Voir et modifier », ses erreurs suivent. */
+function syncMistakesAfterEdit(type, oldRow, newRow) {
+  let changed = false;
+  mistakes.forEach(m => {
+    if (m.type !== type) return;
+    if (m.key === mistakeKey(type, oldRow, m.form)) {
+      m.row = [...newRow];
+      m.key = mistakeKey(type, newRow, m.form);
+      changed = true;
+    }
+  });
+  if (changed) saveMistakes();
+}
+
+function describeMistake(m) {
+  if (m.type === "vocab") {
+    return { kind: "Vocabulaire", question: m.row[1], answer: m.row[2], detail: m.row[0] };
+  }
+  return {
+    kind: "Conjugaison",
+    question: m.row[0] + " · " + m.row[2],
+    answer: m.row[FORM_INDEX[m.form]],
+    detail: m.row[1] + " · " + FORM_LABEL[m.form]
+  };
+}
+
+function renderErrors() {
+  const table = $("errorsTable");
+  table.innerHTML = "";
+  const sorted = [...mistakes].sort((a, b) => b.wrong - a.wrong || b.last - a.last);
+
+  const thead = document.createElement("thead");
+  const headRow = document.createElement("tr");
+  ["Type", "Anglais / verbe", "Bonne réponse", "Détail", "Erreurs", "Réussites", ""]
+    .forEach(name => {
+      const th = document.createElement("th");
+      th.textContent = name;
+      headRow.appendChild(th);
+    });
+  thead.appendChild(headRow);
+  table.appendChild(thead);
+
+  const tbody = document.createElement("tbody");
+  if (!sorted.length) {
+    const tr = document.createElement("tr");
+    const td = document.createElement("td");
+    td.colSpan = 7;
+    td.className = "muted";
+    td.textContent = "🎉 Aucune erreur à revoir pour le moment !";
+    tr.appendChild(td);
+    tbody.appendChild(tr);
+  }
+
+  sorted.forEach(m => {
+    const d = describeMistake(m);
+    const tr = document.createElement("tr");
+    [d.kind, d.question, d.answer, d.detail, "❌ " + m.wrong,
+     m.streak + " / " + MASTERY].forEach(text => {
+      const td = document.createElement("td");
+      td.textContent = text;
+      tr.appendChild(td);
+    });
+    const td = document.createElement("td");
+    const del = makeButton("🗑️", "red", () => {
+      mistakes = mistakes.filter(x => x.key !== m.key);
+      saveMistakes();
+      renderErrors();
+    });
+    del.title = "Retirer de mes erreurs";
+    del.setAttribute("aria-label", "Retirer " + d.question + " de mes erreurs");
+    td.appendChild(del);
+    tr.appendChild(td);
+    tbody.appendChild(tr);
+  });
+  table.appendChild(tbody);
+
+  const nVocab = mistakes.filter(m => m.type === "vocab").length;
+  $("errorsInfo").textContent = mistakes.length + " élément(s) à revoir · " +
+    nVocab + " en vocabulaire · " + (mistakes.length - nVocab) + " en conjugaison";
+  $("startErrorsBtn").disabled = !mistakes.length;
+  $("clearErrorsBtn").disabled = !mistakes.length;
+}
+
+/* ---------- Questions ---------- */
+
+function buildVocabQuestion(row, direction) {
+  return {
+    type: "vocab",
+    row,
+    key: mistakeKey("vocab", row),
+    prompt: direction === "en-fr" ? row[1] : row[2],
+    answer: direction === "en-fr" ? row[2] : row[1],
+    label: "Vocabulaire · " + row[0],
+    hint: direction === "en-fr" ? "Traduis en français." : "Traduis en anglais.",
+    language: direction === "en-fr" ? "en" : "fr",
+    direction
+  };
+}
+
+function buildVerbQuestion(row, form) {
+  return {
+    type: "verbs",
+    row,
+    form,
+    key: mistakeKey("verbs", row, form),
+    answerIndex: FORM_INDEX[form],
+    prompt: row[0] + " · " + row[2],
+    answer: row[FORM_INDEX[form]],
+    label: "Conjugaison",
+    hint: row[1] + " · " + FORM_LABEL[form] + " — écris la phrase complète.",
+    language: "en",
+    direction: "en-fr"
+  };
+}
+
+function showEmpty(label, prompt, hint) {
+  $("prompt").textContent = prompt;
+  $("questionLabel").textContent = label;
+  $("questionHint").textContent = hint;
+  $("typedArea").classList.add("hidden");
+}
+
+function nextQuestion() {
+  answered = false;
+  question = null;
+  $("feedback").textContent = "";
+  $("feedback").className = "";
+  $("choices").innerHTML = "";
+  $("typedAnswer").value = "";
+  $("typedAnswer").disabled = false;
+  $("checkBtn").disabled = false;
+
+  const mode = $("exerciseType").value;
+
+  if (mode === "errors") {
+    const scope = $("errorsScope").value;
+    const pool = mistakes.filter(m => scope === "all" || m.type === scope);
+    if (!pool.length) {
+      showEmpty("Révision des erreurs", "🎉 Aucune erreur à revoir !",
+        "Les mots ratés pendant l’entraînement apparaîtront ici.");
+      return;
+    }
+    const candidates = pool.length > 1
+      ? pool.filter(m => m.key !== lastErrorKey) : pool;
+    const m = candidates[Math.floor(Math.random() * candidates.length)];
+    lastErrorKey = m.key;
+    question = m.type === "vocab"
+      ? buildVocabQuestion(m.row, chooseDirection())
+      : buildVerbQuestion(m.row, m.form);
+    question.label = "Révision des erreurs · " + question.label +
+      " · " + pool.length + " à revoir";
+  } else if (mode === "vocab") {
+    const pool = words.filter(row =>
+      row[1] && row[2] &&
+      ($("theme").value === "all" || row[0] === $("theme").value)
+    );
+    if (!pool.length) {
+      showEmpty("Vocabulaire", "Aucun mot dans cette sélection.",
+        "Charge un fichier CSV ou choisis un autre thème.");
+      return;
+    }
+    const row = pool[Math.floor(Math.random() * pool.length)];
+    question = buildVocabQuestion(row, chooseDirection());
+  } else {
+    const pool = verbs.filter(row =>
+      row[0] && row[1] && row[2] &&
+      ($("tense").value === "all" || row[1] === $("tense").value) &&
+      row[3] && row[4] && row[5]
+    );
+    if (!pool.length) {
+      showEmpty("Conjugaison", "Aucune conjugaison dans cette sélection.",
+        "Charge un fichier CSV ou choisis un autre temps.");
+      return;
+    }
+    const row = pool[Math.floor(Math.random() * pool.length)];
+    question = buildVerbQuestion(row, $("verbForm").value);
+  }
+
+  $("questionLabel").textContent = question.label;
+  $("questionHint").textContent = question.hint;
+  $("prompt").textContent = question.prompt;
+  $("typedArea").classList.toggle("hidden", $("answerMode").value !== "typed");
+
+  if ($("answerMode").value === "qcm") {
+    let distractors;
+    if (question.type === "vocab") {
+      distractors = words
+        .filter(row => row[1] && row[2])
+        .map(row => question.direction === "en-fr" ? row[2] : row[1]);
+    } else {
+      distractors = verbs.map(row => row[question.answerIndex]);
+    }
+    distractors = [...new Set(distractors.filter(value =>
+      value && normalize(value) !== normalize(question.answer)))];
+
+    const options = shuffle([
+      question.answer,
+      ...shuffle(distractors).slice(0, 3)
+    ]);
+
+    options.forEach(optionText => {
+      const button = document.createElement("button");
+      button.textContent = optionText;
+      button.addEventListener("click", () => checkAnswer(optionText));
+      $("choices").appendChild(button);
+    });
+  }
+
+  $("nextBtn").disabled = false;
+}
+
+function checkAnswer(value) {
+  if (!question || answered) return;
+  answered = true;
+  total++;
+
+  const isCorrect = normalize(value) === normalize(question.answer);
+  if (isCorrect) correct++;
+  const status = recordResult(question, isCorrect);
+
+  let message = isCorrect
+    ? "✅ Bravo ! Bonne réponse."
+    : "❌ Pas tout à fait. La bonne réponse est : " + question.answer;
+  if (status === "added") message += " (ajouté à « Mes erreurs »)";
+  if (status === "progress") message += " Encore " + (MASTERY - 1) +
+    " réussite pour le retirer de tes erreurs.";
+  if (status === "mastered") message += " 🌟 Maîtrisé ! Retiré de tes erreurs.";
+
+  $("feedback").className = isCorrect ? "good" : "bad";
+  $("feedback").textContent = message;
+  $("score").textContent = correct + " bonne(s) réponse(s) sur " + total;
+
+  [...$("choices").querySelectorAll("button")].forEach(button => {
+    button.disabled = true;
+  });
+  $("typedAnswer").disabled = true;
+  $("checkBtn").disabled = true;
+}
+
+function speakQuestion() {
+  if (!question) return;
+  if (!("speechSynthesis" in window)) {
+    alert("La lecture audio n'est pas disponible dans ce navigateur.");
+    return;
+  }
+  const synth = window.speechSynthesis;
+  const utterance = new SpeechSynthesisUtterance(question.prompt);
+  utterance.lang = question.language === "en" ? "en-GB" : "fr-FR";
+  const lang = utterance.lang.slice(0, 2);
+  const voice = synth.getVoices().find(v => v.lang && v.lang.toLowerCase().startsWith(lang));
+  if (voice) utterance.voice = voice;
+  // Safari reste parfois muet si on relance la voix juste après cancel().
+  if (synth.speaking || synth.pending) {
+    synth.cancel();
+    setTimeout(() => synth.speak(utterance), 150);
+  } else {
+    synth.speak(utterance);
+  }
+}
+
+/* Lecture CSV : gère les points-virgules et les champs entre guillemets. */
+function parseCSV(text) {
+  text = text.replace(/^\uFEFF/, "");
+  const rows = [];
+  let row = [];
+  let field = "";
+  let quoted = false;
+
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+
+    if (ch === '"') {
+      if (quoted && text[i + 1] === '"') {
+        field += '"';
+        i++;
+      } else {
+        quoted = !quoted;
+      }
+    } else if (!quoted && (ch === ";" || ch === "," || ch === "\t")) {
+      row.push(field.trim());
+      field = "";
+    } else if (!quoted && (ch === "\n" || ch === "\r")) {
+      if (ch === "\r" && text[i + 1] === "\n") i++;
+      row.push(field.trim());
+      if (row.some(cell => cell !== "")) rows.push(row);
+      row = [];
+      field = "";
+    } else {
+      field += ch;
+    }
+  }
+
+  row.push(field.trim());
+  if (row.some(cell => cell !== "")) rows.push(row);
+  return rows;
+}
+
+function looksLikeHeader(row, names) {
+  const first = row.map(cell => normalize(cell));
+  return names.some(name => first.includes(normalize(name)));
+}
+
+async function readSelectedFile(inputId) {
+  const file = $(inputId).files[0];
+  if (!file) throw new Error("Choisis d'abord un fichier CSV.");
+  return decodeCSVBytes(new Uint8Array(await readFileBytes(file)));
+}
+
+/* FileReader fonctionne aussi sur les anciennes versions de Safari / iPad. */
+function readFileBytes(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(new Error("Impossible de lire le fichier."));
+    reader.readAsArrayBuffer(file);
+  });
+}
+
+/* Détecte l'encodage du fichier pour garder les accents :
+   UTF-16 (« texte Unicode » d'Excel), UTF-8, sinon Windows-1252
+   (encodage utilisé par Excel pour « CSV (séparateur : point-virgule) »). */
+function decodeCSVBytes(bytes) {
+  if (bytes[0] === 0xFF && bytes[1] === 0xFE) {
+    return new TextDecoder("utf-16le").decode(bytes);
+  }
+  if (bytes[0] === 0xFE && bytes[1] === 0xFF) {
+    return new TextDecoder("utf-16be").decode(bytes);
+  }
+  try {
+    return new TextDecoder("utf-8", { fatal: true }).decode(bytes);
+  } catch (error) {
+    return new TextDecoder("windows-1252").decode(bytes);
+  }
+}
+
+async function loadVocabFile() {
+  try {
+    const text = await readSelectedFile("vocabFile");
+    let rows = parseCSV(text);
+    if (rows.length && looksLikeHeader(rows[0], ["theme", "anglais", "francais", "français"])) {
+      rows.shift();
+    }
+    rows = rows
+      .filter(row => row.length >= 3 && row[1] && row[2])
+      .map(row => [row[0] || "Général", row[1], row[2]]);
+
+    if (!rows.length) {
+      throw new Error("Aucun mot valide trouvé. Vérifie les trois colonnes du fichier.");
+    }
+
+    const result = applyImport("vocab", rows, importMode("vocabMode"));
+    saveLists();
+    refreshThemes();
+    resetEditorState();
+    nextQuestion();
+    $("vocabStatus").textContent = result + " Total : " + words.length +
+      " mots, sauvegardés automatiquement.";
+  } catch (error) {
+    $("vocabStatus").textContent = "Erreur : " + error.message;
+  }
+}
+
+async function loadVerbsFile() {
+  try {
+    const text = await readSelectedFile("verbsFile");
+    let rows = parseCSV(text);
+    if (rows.length && looksLikeHeader(rows[0], ["verbe", "temps", "sujet", "affirmatif"])) {
+      rows.shift();
+    }
+    rows = rows
+      .filter(row => row.length >= 6 && row[0] && row[1] && row[2])
+      .map(row => row.slice(0, 6));
+
+    if (!rows.length) {
+      throw new Error("Aucune ligne valide trouvée. Vérifie les six colonnes du fichier.");
+    }
+
+    const result = applyImport("verbs", rows, importMode("verbsMode"));
+    saveLists();
+    refreshTenses();
+    resetEditorState();
+    nextQuestion();
+    $("verbsStatus").textContent = result + " Total : " + verbs.length +
+      " lignes de conjugaison, sauvegardées automatiquement.";
+  } catch (error) {
+    $("verbsStatus").textContent = "Erreur : " + error.message;
+  }
+}
+
+function downloadText(filename, content) {
+  const blob = new Blob(["\uFEFF" + content], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  // Safari a besoin d'un délai avant de libérer le fichier téléchargé.
+  setTimeout(() => URL.revokeObjectURL(url), 4000);
+}
+
+function csvCell(value) {
+  const text = String((value == null ? "" : value));
+  return /[;"\r\n,\t]/.test(text) ? '"' + text.replace(/"/g, '""') + '"' : text;
+}
+
+function rowsToCSV(header, rows) {
+  return [header, ...rows]
+    .map(row => row.map(csvCell).join(";"))
+    .join("\r\n");
+}
+
+function showTab(tab) {
+  const tabs = {
+    practice: ["practiceSection", "practiceTab"],
+    errors: ["errorsSection", "errorsTab"],
+    edit: ["editSection", "editTab"],
+    manage: ["manageSection", "manageTab"]
+  };
+  Object.entries(tabs).forEach(([name, [sectionId, buttonId]]) => {
+    $(sectionId).classList.toggle("hidden", name !== tab);
+    $(buttonId).className = name === tab ? "" : "secondary";
+  });
+  updateCounts();
+  if (tab === "edit") renderEditor();
+  if (tab === "errors") renderErrors();
+}
+
+/* ---------- Rubrique « Voir et modifier les listes » ---------- */
+
+const editorConfig = {
+  vocab: {
+    columns: ["Thème", "Anglais", "Français"],
+    required: [0, 1, 2],
+    groupIndex: 0,
+    groupName: "thème",
+    groupLabel: "Filtrer par thème",
+    groupAll: "Tous les thèmes",
+    listName: "le vocabulaire",
+    itemPlural: "mots",
+    get: () => words,
+    set: list => { words = list; },
+    key: row => normalize(row[1]) + "|" + normalize(row[2]),
+    describe: row => "« " + row[1] + " → " + row[2] + " » (" + row[0] + ")"
+  },
+  verbs: {
+    columns: ["Verbe", "Temps", "Sujet", "Affirmatif", "Négatif", "Interrogatif"],
+    required: [0, 1, 2, 3, 4, 5],
+    groupIndex: 0,
+    groupName: "verbe",
+    groupLabel: "Filtrer par verbe",
+    groupAll: "Tous les verbes",
+    listName: "la conjugaison",
+    itemPlural: "lignes",
+    get: () => verbs,
+    set: list => { verbs = list; },
+    key: row => normalize(row[0]) + "|" + normalize(row[1]) + "|" + normalize(row[2]),
+    describe: row => "« " + row[0] + " · " + row[1] + " · " + row[2] + " »"
+  }
+};
+
+let editType = "vocab";
+let editingIndex = -1;
+let selectedRows = new Set();
+let undoSnapshot = null;
+
+function copyRows(list) {
+  return list.map(row => [...row]);
+}
+
+/* Recherche sans tenir compte des majuscules ni des accents. */
+function searchKey(value) {
+  return normalize(value).normalize("NFD").replace(/[̀-ͯ]/g, "");
+}
+
+function importMode(name) {
+  const checked = document.querySelector('input[name="' + name + '"]:checked');
+  return checked ? checked.value : "replace";
+}
+
+/* Garde la première occurrence de chaque élément. */
+function removeDuplicates(rows, key) {
+  const seen = new Set();
+  return rows.filter(row => {
+    const k = key(row);
+    if (seen.has(k)) return false;
+    seen.add(k);
+    return true;
+  });
+}
+
+/* Import CSV : ajoute (sans doublons) ou remplace la liste. */
+function applyImport(type, rows, mode) {
+  const cfg = editorConfig[type];
+  const current = cfg.get();
+
+  if (mode === "replace") {
+    undoSnapshot = { type, data: copyRows(current) };
+    const unique = removeDuplicates(rows, cfg.key);
+    cfg.set(copyRows(unique));
+    const dup = rows.length - unique.length;
+    return unique.length + " " + cfg.itemPlural + " chargé(e)s (liste remplacée)" +
+      (dup ? ", " + dup + " doublon(s) du fichier ignoré(s)." : ".");
+  }
+
+  const known = new Set(current.map(cfg.key));
+  let added = 0;
+  let skipped = 0;
+  rows.forEach(row => {
+    const key = cfg.key(row);
+    if (known.has(key)) {
+      skipped++;
+    } else {
+      known.add(key);
+      current.push([...row]);
+      added++;
+    }
+  });
+  return added + " " + cfg.itemPlural + " ajouté(e)s" +
+    (skipped ? ", " + skipped + " doublon(s) ignoré(s)." : ".");
+}
+
+function resetEditorState() {
+  editingIndex = -1;
+  selectedRows.clear();
+  if (!$("editSection").classList.contains("hidden")) renderEditor();
+}
+
+function setEditStatus(message, good = true) {
+  $("editStatus").textContent = message;
+  $("editStatus").className = message ? (good ? "msg-good" : "msg-bad") : "";
+}
+
+function refreshEditGroups(reset) {
+  const cfg = editorConfig[editType];
+  const select = $("editGroup");
+  const previous = reset ? "all" : select.value;
+  const groups = [...new Set(cfg.get().map(row => row[cfg.groupIndex]).filter(Boolean))]
+    .sort((a, b) => a.localeCompare(b, "fr"));
+
+  select.innerHTML = "";
+  const all = document.createElement("option");
+  all.value = "all";
+  all.textContent = cfg.groupAll;
+  select.appendChild(all);
+  groups.forEach(group => {
+    const option = document.createElement("option");
+    option.value = group;
+    option.textContent = group;
+    select.appendChild(option);
+  });
+  select.value = groups.includes(previous) ? previous : "all";
+  $("editGroupLabel").textContent = cfg.groupLabel;
+}
+
+function visibleRows() {
+  const cfg = editorConfig[editType];
+  const group = $("editGroup").value;
+  const query = searchKey($("editSearch").value);
+  return cfg.get()
+    .map((row, index) => ({ row, index }))
+    .filter(({ row }) =>
+      (group === "all" || row[cfg.groupIndex] === group) &&
+      (!query || row.some(cell => searchKey(cell).includes(query)))
+    );
+}
+
+function makeButton(text, className, onClick) {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.textContent = text;
+  if (className) button.className = className;
+  button.addEventListener("click", onClick);
+  return button;
+}
+
+function renderEditor() {
+  const cfg = editorConfig[editType];
+  const list = cfg.get();
+  refreshEditGroups(false);
+
+  // Supprime de la sélection les lignes qui n'existent plus.
+  selectedRows = new Set([...selectedRows].filter(i => i < list.length));
+
+  const rows = visibleRows();
+  const isEditing = editingIndex !== -1;
+  const table = $("editTable");
+  table.innerHTML = "";
+
+  /* En-tête */
+  const thead = document.createElement("thead");
+  const headRow = document.createElement("tr");
+  const selectAllCell = document.createElement("th");
+  const selectAll = document.createElement("input");
+  selectAll.type = "checkbox";
+  selectAll.title = "Tout sélectionner (éléments affichés)";
+  selectAll.setAttribute("aria-label", "Tout sélectionner");
+  selectAll.checked = rows.length > 0 && rows.every(r => selectedRows.has(r.index));
+  selectAll.disabled = isEditing || !rows.length;
+  selectAll.addEventListener("change", () => {
+    rows.forEach(r => selectAll.checked
+      ? selectedRows.add(r.index)
+      : selectedRows.delete(r.index));
+    renderEditor();
+  });
+  selectAllCell.appendChild(selectAll);
+  headRow.appendChild(selectAllCell);
+  cfg.columns.forEach(name => {
+    const th = document.createElement("th");
+    th.textContent = name;
+    headRow.appendChild(th);
+  });
+  const actionsHead = document.createElement("th");
+  actionsHead.textContent = "Actions";
+  headRow.appendChild(actionsHead);
+  thead.appendChild(headRow);
+  table.appendChild(thead);
+
+  /* Lignes */
+  const tbody = document.createElement("tbody");
+  if (!rows.length) {
+    const tr = document.createElement("tr");
+    const td = document.createElement("td");
+    td.colSpan = cfg.columns.length + 2;
+    td.className = "muted";
+    td.textContent = list.length
+      ? "Aucun élément ne correspond à la recherche."
+      : "La liste est vide. Charge un fichier CSV dans « Gestion des listes ».";
+    tr.appendChild(td);
+    tbody.appendChild(tr);
+  }
+
+  rows.forEach(({ row, index }) => {
+    const tr = document.createElement("tr");
+    const editingThis = index === editingIndex;
+    if (selectedRows.has(index)) tr.classList.add("selected");
+    if (editingThis) tr.classList.add("editing");
+
+    const checkCell = document.createElement("td");
+    const check = document.createElement("input");
+    check.type = "checkbox";
+    check.setAttribute("aria-label", "Sélectionner " + cfg.describe(row));
+    check.checked = selectedRows.has(index);
+    check.disabled = isEditing;
+    check.addEventListener("change", () => {
+      check.checked ? selectedRows.add(index) : selectedRows.delete(index);
+      renderEditor();
+    });
+    checkCell.appendChild(check);
+    tr.appendChild(checkCell);
+
+    cfg.columns.forEach((name, col) => {
+      const td = document.createElement("td");
+      if (editingThis) {
+        const input = document.createElement("input");
+        input.value = (row[col] == null ? "" : row[col]);
+        input.dataset.col = col;
+        input.setAttribute("aria-label", name);
+        input.addEventListener("keydown", event => {
+          if (event.key === "Enter") saveEdit(index);
+          if (event.key === "Escape") cancelEdit();
+        });
+        td.appendChild(input);
+      } else {
+        td.textContent = (row[col] == null ? "" : row[col]);
+      }
+      tr.appendChild(td);
+    });
+
+    const actionsCell = document.createElement("td");
+    const actions = document.createElement("div");
+    actions.className = "row-actions";
+    if (editingThis) {
+      actions.appendChild(makeButton("💾 Enregistrer", "green", () => saveEdit(index)));
+      actions.appendChild(makeButton("Annuler", "secondary", cancelEdit));
+    } else {
+      const edit = makeButton("✏️ Modifier", "secondary", () => {
+        editingIndex = index;
+        setEditStatus("");
+        renderEditor();
+        const first = $("editTable").querySelector("input[data-col]");
+        if (first) first.focus();
+      });
+      const del = makeButton("🗑️", "red", () =>
+        deleteRows([index], "Supprimer " + cfg.describe(row) + " ?"));
+      del.title = "Supprimer";
+      del.setAttribute("aria-label", "Supprimer " + cfg.describe(row));
+      edit.disabled = del.disabled = isEditing;
+      actions.appendChild(edit);
+      actions.appendChild(del);
+    }
+    actionsCell.appendChild(actions);
+    tr.appendChild(actionsCell);
+    tbody.appendChild(tr);
+  });
+  table.appendChild(tbody);
+
+  /* Informations et boutons globaux */
+  $("editInfo").textContent =
+    rows.length + " " + cfg.itemPlural + " affiché(e)s sur " + list.length +
+    " · " + selectedRows.size + " sélectionné(e)s";
+
+  $("deleteSelectedBtn").textContent =
+    "🗑️ Supprimer la sélection (" + selectedRows.size + ")";
+  $("deleteSelectedBtn").disabled = isEditing || selectedRows.size === 0;
+
+  const group = $("editGroup").value;
+  $("deleteGroupBtn").classList.toggle("hidden", group === "all");
+  $("deleteGroupBtn").textContent =
+    "🗑️ Supprimer tout le " + cfg.groupName + " « " + group + " »";
+  $("deleteGroupBtn").disabled = isEditing;
+
+  $("clearListBtn").textContent = "⚠️ Vider toute " + cfg.listName;
+  $("clearListBtn").disabled = isEditing || list.length === 0;
+
+  $("undoBtn").disabled = !undoSnapshot;
+  $("undoBtn").textContent = undoSnapshot
+    ? "↩️ Annuler la dernière suppression (" +
+      editorConfig[undoSnapshot.type].listName + ")"
+    : "↩️ Annuler la dernière suppression";
+}
+
+/* Après chaque changement : rafraîchir, sauvegarder, réafficher. */
+function commitChange(message) {
+  refreshThemes();
+  refreshTenses();
+  const ok = saveLists();
+  editingIndex = -1;
+  renderEditor();
+  setEditStatus(ok
+    ? "✔ " + message + " — enregistré automatiquement."
+    : "La sauvegarde a échoué. Exporte tes listes en CSV.", ok);
+}
+
+function saveEdit(index) {
+  const cfg = editorConfig[editType];
+  const inputs = [...$("editTable").querySelectorAll("input[data-col]")];
+  const values = cfg.columns.map((_, col) => {
+    const input = inputs.find(i => Number(i.dataset.col) === col);
+    return input ? input.value.trim() : "";
+  });
+
+  const missing = cfg.required.filter(col => !values[col]);
+  if (missing.length) {
+    setEditStatus("Remplis toutes les cases : " +
+      missing.map(col => cfg.columns[col]).join(", ") + ".", false);
+    return;
+  }
+
+  syncMistakesAfterEdit(editType, cfg.get()[index], values);
+  cfg.get()[index] = values;
+  // Une modification rend l'annulation de suppression incohérente.
+  if (undoSnapshot && undoSnapshot.type === editType) undoSnapshot = null;
+  commitChange("Modification de " + cfg.describe(values));
+}
+
+function cancelEdit() {
+  editingIndex = -1;
+  setEditStatus("");
+  renderEditor();
+}
+
+function deleteRows(indices, confirmText) {
+  if (!indices.length) return;
+  if (!confirm(confirmText)) return;
+  const cfg = editorConfig[editType];
+  const current = cfg.get();
+  undoSnapshot = { type: editType, data: copyRows(current) };
+  const toDelete = new Set(indices);
+  cfg.set(current.filter((_, i) => !toDelete.has(i)));
+  selectedRows.clear();
+  commitChange(indices.length + " élément(s) supprimé(s)");
+}
+
+function undoLastDeletion() {
+  if (!undoSnapshot) return;
+  const { type, data } = undoSnapshot;
+  editorConfig[type].set(copyRows(data));
+  undoSnapshot = null;
+  selectedRows.clear();
+  if (type !== editType) setEditType(type);
+  commitChange("Suppression annulée : la liste est restaurée");
+}
+
+function setEditType(type) {
+  editType = type;
+  editingIndex = -1;
+  selectedRows.clear();
+  $("editSearch").value = "";
+  $("editVocabTab").className = type === "vocab" ? "" : "secondary";
+  $("editVerbsTab").className = type === "verbs" ? "" : "secondary";
+  refreshEditGroups(true);
+  setEditStatus("");
+  renderEditor();
+}
+
+function exportVocab() {
+  downloadText("vocabulaire_lucas.csv",
+    rowsToCSV(["theme", "anglais", "francais"], words));
+}
+
+function exportVerbs() {
+  downloadText("conjugaison_lucas.csv",
+    rowsToCSV(
+      ["verbe", "temps", "sujet", "affirmatif", "negatif", "interrogatif"],
+      verbs));
+}
+
+/* Événements de l'application */
+$("practiceTab").addEventListener("click", () => showTab("practice"));
+$("manageTab").addEventListener("click", () => showTab("manage"));
+$("startBtn").addEventListener("click", nextQuestion);
+$("nextBtn").addEventListener("click", nextQuestion);
+$("audioBtn").addEventListener("click", speakQuestion);
+$("checkBtn").addEventListener("click", () => checkAnswer($("typedAnswer").value));
+$("typedAnswer").addEventListener("keydown", event => {
+  if (event.key === "Enter") checkAnswer($("typedAnswer").value);
+});
+$("exerciseType").addEventListener("change", () => {
+  updateExerciseControls();
+  nextQuestion();
+});
+$("theme").addEventListener("change", nextQuestion);
+$("tense").addEventListener("change", nextQuestion);
+$("verbForm").addEventListener("change", nextQuestion);
+$("direction").addEventListener("change", nextQuestion);
+$("answerMode").addEventListener("change", nextQuestion);
+$("loadVocabBtn").addEventListener("click", loadVocabFile);
+$("loadVerbsBtn").addEventListener("click", loadVerbsFile);
+
+$("vocabTemplateBtn").addEventListener("click", () => {
+  downloadText("modele_vocabulaire.csv",
+    rowsToCSV(["theme", "anglais", "francais"], [
+      ["Animaux", "cat", "chat"],
+      ["École", "book", "livre"]
+    ]));
+});
+$("verbsTemplateBtn").addEventListener("click", () => {
+  downloadText("modele_conjugaison.csv",
+    rowsToCSV(
+      ["verbe", "temps", "sujet", "affirmatif", "negatif", "interrogatif"],
+      [
+        ["to play", "Present simple", "I", "I play", "I do not play", "Do I play?"],
+        ["to play", "Present simple", "he", "he plays", "he does not play", "Does he play?"]
+      ]));
+});
+$("exportVocabBtn").addEventListener("click", exportVocab);
+$("exportVerbsBtn").addEventListener("click", exportVerbs);
+$("exportVocabBtn2").addEventListener("click", exportVocab);
+$("exportVerbsBtn2").addEventListener("click", exportVerbs);
+
+/* Événements de la rubrique « Voir et modifier les listes » */
+$("editTab").addEventListener("click", () => showTab("edit"));
+$("editVocabTab").addEventListener("click", () => setEditType("vocab"));
+$("editVerbsTab").addEventListener("click", () => setEditType("verbs"));
+$("editSearch").addEventListener("input", () => {
+  editingIndex = -1;
+  renderEditor();
+});
+$("editGroup").addEventListener("change", () => {
+  editingIndex = -1;
+  selectedRows.clear();
+  renderEditor();
+});
+$("deleteSelectedBtn").addEventListener("click", () => {
+  const n = selectedRows.size;
+  deleteRows([...selectedRows],
+    "Supprimer les " + n + " élément(s) sélectionné(s) ?");
+});
+$("deleteGroupBtn").addEventListener("click", () => {
+  const cfg = editorConfig[editType];
+  const group = $("editGroup").value;
+  if (group === "all") return;
+  const indices = cfg.get()
+    .map((row, i) => row[cfg.groupIndex] === group ? i : -1)
+    .filter(i => i !== -1);
+  deleteRows(indices, "Supprimer tout le " + cfg.groupName + " « " + group +
+    " » (" + indices.length + " élément(s)) ?");
+});
+$("clearListBtn").addEventListener("click", () => {
+  const cfg = editorConfig[editType];
+  const list = cfg.get();
+  deleteRows(list.map((_, i) => i),
+    "Vider toute " + cfg.listName + " (" + list.length + " élément(s)) ?\n\n" +
+    "Conseil : exporte d'abord le CSV comme copie de sécurité.");
+});
+$("undoBtn").addEventListener("click", undoLastDeletion);
+
+/* Événements de l'onglet « Mes erreurs » */
+$("errorsTab").addEventListener("click", () => showTab("errors"));
+$("errorsScope").addEventListener("change", nextQuestion);
+$("startErrorsBtn").addEventListener("click", () => {
+  $("exerciseType").value = "errors";
+  updateExerciseControls();
+  showTab("practice");
+  nextQuestion();
+});
+$("clearErrorsBtn").addEventListener("click", () => {
+  if (!confirm("Vider toute la liste des erreurs (" + mistakes.length + " élément(s)) ?")) return;
+  mistakes = [];
+  saveMistakes();
+  renderErrors();
+});
+$("dedupeBtn").addEventListener("click", () => {
+  const cfg = editorConfig[editType];
+  const list = cfg.get();
+  const unique = removeDuplicates(list, cfg.key);
+  const dup = list.length - unique.length;
+  if (!dup) {
+    setEditStatus("✔ Aucun doublon trouvé dans " + cfg.listName + ".");
+    return;
+  }
+  if (!confirm(dup + " doublon(s) trouvé(s) dans " + cfg.listName +
+      ". Les supprimer (la première occurrence est conservée) ?")) return;
+  undoSnapshot = { type: editType, data: copyRows(list) };
+  cfg.set(unique);
+  selectedRows.clear();
+  commitChange(dup + " doublon(s) supprimé(s)");
+});
+
+/* ---------- Google Sheet partagé ---------- */
+
+const EMBEDDED = readEmbeddedLists();
+
+/* Lien utilisé : celui enregistré sur cet appareil, sinon celui intégré au fichier. */
+function getSheetUrl() {
+  let stored = null;
+  try { stored = localStorage.getItem("lucas_sheet_url"); } catch (error) { /* ignoré */ }
+  if (stored === "none") return "";
+  if (stored) return stored;
+  return EMBEDDED && EMBEDDED.sheetUrl ? EMBEDDED.sheetUrl : "";
+}
+
+function setSheetUrl(value) {
+  try { localStorage.setItem("lucas_sheet_url", value || "none"); } catch (error) { /* ignoré */ }
+}
+
+function sheetId(url) {
+  if (/\/spreadsheets\/d\/e\//.test(url)) return null; // lien « Publier sur le web »
+  const match = String(url).match(/\/spreadsheets\/d\/([a-zA-Z0-9_-]{20,})/);
+  return match ? match[1] : null;
+}
+
+function setSheetStatus(message, good) {
+  $("sheetStatus").textContent = message;
+  $("sheetStatus").className = good === undefined ? "muted" : (good ? "msg-good" : "msg-bad");
+}
+
+function updateSheetUI() {
+  const url = getSheetUrl();
+  $("sheetUrl").value = url;
+  $("syncSheetBtn").disabled = !url;
+  $("removeSheetBtn").disabled = !url;
+  $("sheetEditNotice").classList.toggle("hidden", !url);
+}
+
+function gvizUrl(id, name, tqx) {
+  return "https://docs.google.com/spreadsheets/d/" + id +
+    "/gviz/tq?tqx=" + tqx + "&headers=1&sheet=" + encodeURIComponent(name) +
+    "&t=" + Date.now();
+}
+
+/* Méthode 1 : lecture directe du CSV. */
+async function fetchSheetCSV(id, name) {
+  const controller = "AbortController" in window ? new AbortController() : null;
+  const timer = controller ? setTimeout(() => controller.abort(), 15000) : null;
+  try {
+    const response = await fetch(gvizUrl(id, name, "out:csv"),
+      controller ? { signal: controller.signal } : {});
+    if (!response.ok) throw new Error("erreur " + response.status);
+    const text = await response.text();
+    if (/^\s*</.test(text)) throw new Error("accès refusé");
+    return parseCSV(text);
+  } finally {
+    if (timer) clearTimeout(timer);
+  }
+}
+
+/* Méthode 2 : chargement par balise <script> (fonctionne même quand le
+   navigateur bloque la méthode 1, par exemple en ouvrant le fichier en local). */
+let gvizCounter = 0;
+function fetchSheetScript(id, name) {
+  return new Promise((resolve, reject) => {
+    const callback = "__lucasSheet" + (++gvizCounter);
+    const script = document.createElement("script");
+    let done = false;
+    const finish = (error, rows) => {
+      if (done) return;
+      done = true;
+      clearTimeout(timer);
+      delete window[callback];
+      script.remove();
+      error ? reject(error) : resolve(rows);
+    };
+    const timer = setTimeout(() => finish(new Error(
+      "pas de réponse (Google Sheet probablement non partagé avec « Tous les utilisateurs disposant du lien »)")), 15000);
+
+    window[callback] = response => {
+      if (!response || response.status === "error") {
+        const detail = response && response.errors && response.errors[0];
+        finish(new Error(detail ? (detail.detailed_message || detail.message || detail.reason) : "réponse invalide"));
+        return;
+      }
+      const table = response.table || { cols: [], rows: [] };
+      const cell = c => c == null ? "" :
+        (c.f != null ? String(c.f) : (c.v != null ? String(c.v) : ""));
+      const rows = [table.cols.map(col => String(col.label || "").trim())];
+      table.rows.forEach(r => rows.push((r.c || []).map(c => cell(c).trim())));
+      finish(null, rows.filter(r => r.some(v => v !== "")));
+    };
+    script.onerror = () => finish(new Error("Google Sheet inaccessible"));
+    script.src = gvizUrl(id, name, "out:json;responseHandler:" + callback);
+    document.head.appendChild(script);
+  });
+}
+
+async function fetchSheetTab(id, name) {
+  try {
+    return await fetchSheetCSV(id, name);
+  } catch (firstError) {
+    console.warn("Lecture directe impossible, essai de la 2e méthode.", firstError);
+    return await fetchSheetScript(id, name);
+  }
+}
+
+/* Si une ligne entière est dans une seule case (ex. « theme;anglais;francais »
+   dans la colonne A après un import CSV), on la redécoupe. */
+function unpackRows(rows) {
+  return rows.map(row => {
+    const filled = row.filter(cell => cell !== "");
+    return filled.length === 1 && /[;\t]/.test(filled[0])
+      ? filled[0].split(/[;\t]/).map(cell => cell.trim())
+      : row;
+  });
+}
+
+const VOCAB_HEADER = ["anglais", "francais", "français", "theme", "thème"];
+const VERB_HEADER = ["affirmatif", "negatif", "négatif", "interrogatif"];
+
+function cleanVocabRows(rawRows) {
+  const rows = unpackRows(rawRows);
+  if (rows.length && looksLikeHeader(rows[0], VERB_HEADER)) return []; // mauvais onglet
+  if (rows.length && looksLikeHeader(rows[0], VOCAB_HEADER)) rows.shift();
+  return removeDuplicates(rows
+    .filter(row => row.length >= 3 && row[1] && row[2])
+    .map(row => [row[0] || "Général", row[1], row[2]]), editorConfig.vocab.key);
+}
+
+function cleanVerbRows(rawRows) {
+  const rows = unpackRows(rawRows);
+  if (rows.length && looksLikeHeader(rows[0], ["anglais", "francais", "français"])) return [];
+  if (rows.length && looksLikeHeader(rows[0], VERB_HEADER.concat(["verbe", "temps", "sujet"]))) rows.shift();
+  return removeDuplicates(rows
+    .filter(row => row.length >= 6 && row[0] && row[1] && row[2])
+    .map(row => row.slice(0, 6)), editorConfig.verbs.key);
+}
+
+/* Décrit ce qui a été reçu, pour comprendre un problème. */
+function describeReceived(rawRows) {
+  if (!rawRows.length) return "aucune ligne reçue";
+  const first = rawRows[0].filter(cell => cell !== "");
+  return rawRows.length + " ligne(s) reçue(s), la 1re contient " + first.length +
+    " case(s) : « " + first.join(" | ").slice(0, 90) + " »";
+}
+
+/* Récupère les deux onglets et remplace les listes. En cas d'échec,
+   les listes déjà enregistrées sur l'appareil restent utilisées. */
+async function syncFromSheet(silent) {
+  const url = getSheetUrl();
+  if (!url) return;
+  const id = sheetId(url);
+  if (!id) {
+    setSheetStatus("Ce lien n’est pas reconnu. Utilise le lien du bouton « Partager » " +
+      "(il ressemble à https://docs.google.com/spreadsheets/d/…/edit).", false);
+    return;
+  }
+
+  setSheetStatus("⏳ Mise à jour depuis le Google Sheet…");
+  $("sheetHelp").classList.add("hidden");
+  const results = await Promise.allSettled([
+    fetchSheetTab(id, "vocabulaire"),
+    fetchSheetTab(id, "conjugaison")
+  ]);
+
+  const notes = [];
+  let updated = false;
+  if (results[0].status === "fulfilled") {
+    const rows = cleanVocabRows(results[0].value);
+    if (rows.length) { words = rows; updated = true; }
+    else notes.push("onglet « vocabulaire » non reconnu (" + describeReceived(results[0].value) +
+      ") — il faut 3 colonnes : theme, anglais, francais");
+  } else {
+    notes.push("vocabulaire non lu : " + results[0].reason.message);
+  }
+  if (results[1].status === "fulfilled") {
+    const rows = cleanVerbRows(results[1].value);
+    if (rows.length) { verbs = rows; updated = true; }
+    else notes.push("onglet « conjugaison » non reconnu (" + describeReceived(results[1].value) +
+      ") — il faut 6 colonnes : verbe, temps, sujet, affirmatif, negatif, interrogatif");
+  } else {
+    notes.push("conjugaison non lue : " + results[1].reason.message);
+  }
+
+  if (updated) {
+    saveLists();
+    refreshThemes();
+    refreshTenses();
+    resetEditorState();
+    if (!question) nextQuestion();
+  }
+
+  const time = new Date().toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
+  if (updated && !notes.length) {
+    setSheetStatus("✔ Listes à jour depuis le Google Sheet (" + time + ") : " +
+      words.length + " mots, " + verbs.length + " lignes de conjugaison.", true);
+    $("listStatus").textContent = "🌐 Listes à jour depuis le Google Sheet (" + time + ").";
+  } else if (updated) {
+    setSheetStatus("Mise à jour partielle (" + time + ") : " + notes.join(" ; ") +
+      ". Vérifie le nom des onglets.", false);
+  } else {
+    const message = "Impossible de lire le Google Sheet (" + notes.join(" ; ") + "). " +
+      "Vérifie la connexion internet, le nom des onglets et que le partage est « Tous les " +
+      "utilisateurs disposant du lien ». Les listes enregistrées sur cet appareil sont utilisées.";
+    setSheetStatus(message, false);
+    $("sheetTestLink").href = "https://docs.google.com/spreadsheets/d/" + id +
+      "/gviz/tq?tqx=out:csv&sheet=vocabulaire";
+    $("sheetHelp").classList.remove("hidden");
+    $("listStatus").textContent = silent
+      ? "Google Sheet indisponible : listes enregistrées sur cet appareil utilisées."
+      : message;
+  }
+}
+
+$("saveSheetBtn").addEventListener("click", () => {
+  const url = $("sheetUrl").value.trim();
+  if (!url) {
+    setSheetStatus("Colle d’abord le lien du Google Sheet.", false);
+    return;
+  }
+  if (!sheetId(url)) {
+    setSheetStatus("Ce lien n’est pas reconnu. Utilise le lien du bouton « Partager » " +
+      "(il ressemble à https://docs.google.com/spreadsheets/d/…/edit).", false);
+    return;
+  }
+  setSheetUrl(url);
+  updateSheetUI();
+  syncFromSheet(false);
+});
+$("syncSheetBtn").addEventListener("click", () => syncFromSheet(false));
+$("removeSheetBtn").addEventListener("click", () => {
+  if (!confirm("Ne plus utiliser le Google Sheet sur cet appareil ? Les listes actuelles sont gardées.")) return;
+  setSheetUrl("");
+  updateSheetUI();
+  setSheetStatus("Google Sheet désactivé sur cet appareil. Pense à recréer la version pour Lucas.");
+});
+
+/* Crée une copie de l'application qui contient les listes actuelles. */
+function buildForLucas() {
+  const payload = { version: Date.now(), words, verbs, sheetUrl: getSheetUrl() };
+  const json = JSON.stringify(payload).replace(/</g, "\\u003c");
+  const pattern = /(<script id="embeddedLists" type="application\/json">)[\s\S]*?(<\/script>)/;
+  if (!pattern.test(ORIGINAL_HTML)) {
+    $("buildStatus").textContent = "Erreur : impossible de créer le fichier.";
+    return;
+  }
+  const html = ORIGINAL_HTML.replace(pattern, (_, start, end) => start + json + end);
+  const blob = new Blob([html], { type: "text/html;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "EnglishFunLucas.html";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 4000);
+  try {
+    localStorage.setItem("lucas_lists_version", String(payload.version));
+  } catch (error) { /* stockage indisponible */ }
+  $("buildStatus").textContent = "✔ Fichier « EnglishFunLucas.html » créé avec " +
+    words.length + " mots et " + verbs.length +
+    " lignes de conjugaison. Remplace l’ancien fichier par celui-ci.";
+}
+$("buildForLucasBtn").addEventListener("click", buildForLucas);
+
+/* Initialisation : restaurer d'abord les listes, puis afficher l'application. */
+loadSavedLists();
+loadMistakes();
+updateErrorsBadge();
+refreshThemes();
+refreshTenses();
+updateExerciseControls();
+updateCounts();
+nextQuestion();
+updateSheetUI();
+syncFromSheet(true);
+</script></body></html>
